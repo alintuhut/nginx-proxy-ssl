@@ -8,7 +8,7 @@ I added a VOLUME (/ssl) to place the certificates and key files for SSL. Create 
 
 To run it:
 
-    $ docker run -d -p 80:80 -p 443:443 -v /var/run/docker.sock:/tmp/docker.sock -v /local/ssl:/ssl atuhut/nginx-proxy-ssl
+    $ docker run -d -p 80:80 -p 443:443 -v /var/run/docker.sock:/tmp/docker.sock -v /local/ssl:/ssl alintuhut/nginx-proxy-ssl
 
 Then start any containers you want proxied with an env var VIRTUAL_HOST=subdomain.youdomain.com
 
