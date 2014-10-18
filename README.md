@@ -2,15 +2,19 @@ nginx-proxy sets up a container running nginx and [docker-gen][1].  docker-gen g
 
 See [Automated Nginx Reverse Proxy for Docker][2] for why you might want to use this.
 
+I added a VOLUME (/ssl) to place the certificates and key files for SSL. Create one folder named {{host}} for each host and put the server.crt and server.key files inside.
+
 ### Usage
 
 To run it:
 
-    $ docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock jwilder/nginx-proxy
+    $ docker run -d -p 80:80 -p 443:443 -v /var/run/docker.sock:/tmp/docker.sock -v /local/ssl:/ssl atuhut/nginx-proxy-ssl
 
 Then start any containers you want proxied with an env var VIRTUAL_HOST=subdomain.youdomain.com
 
     $ docker run -e VIRTUAL_HOST=foo.bar.com  ...
+
+    $ docker run -e VIRTUAL_HOST=foo.bar.com -e SSL=TRUE  ... (for SSL support)
 
 Provided your DNS is setup to forward foo.bar.com to the a host running nginx-proxy, the request will be routed to a container with the VIRTUAL_HOST env var set.
 

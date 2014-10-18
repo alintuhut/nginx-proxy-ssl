@@ -41,6 +41,17 @@ upstream {{ $host }} {
 }
 
 server {
+	listen	80;
+	{{ range $index, $value := $containers }}	
+		{{ if $value.Env.SSL }}
+			# force secure request
+ 			rewrite ^(.*) https://{{ $host }}$1 permanent;
+			listen	443 ssl;
+		        ssl_certificate /certs/{{ $host }}/server.crt;
+	        	ssl_certificate_key /certs/{{ $host }}/server.key;
+		{{ end }}
+	{{ end }}
+
 	gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
 	server_name {{ $host }};
