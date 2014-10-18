@@ -40,13 +40,25 @@ upstream {{ $host }} {
 {{ end }}
 }
 
+{{ range $index, $value := $containers }}	
+	{{ if $value.Env.SSL }}					
+	server {
+	    listen 80;
+	    server_name {{ $host }};
+	    rewrite ^(.*) https://{{ $host }}$1 permanent;
+	}
+	{{ end }}
+{{ end }}
+
 server {	
-	listen 80;
+
 	{{ range $index, $value := $containers }}	
 		{{ if $value.Env.SSL }}					
 			listen	443 ssl;
-		        ssl_certificate /ssl/{{ $host }}/server.crt;
-	        	ssl_certificate_key /ssl/{{ $host }}/server.key;
+	        ssl_certificate /ssl/{{ $host }}/server.crt;
+        	ssl_certificate_key /ssl/{{ $host }}/server.key;
+	    {{ else }}
+	    	listen 80;
 		{{ end }}
 	{{ end }}
 
